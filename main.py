@@ -1,4 +1,4 @@
-from functools import reduce
+from pickle import load, dumps
 
 class Production:
     def __init__(self, nr, lhs, rhs=()):
@@ -17,6 +17,19 @@ class Production:
 
     def copy(self):
         return Production(self.nr, self.lhs, list(self.rhs))
+
+    def save(self):
+        return "{}/*/{}/*/{}".format(self.nr, self.lhs, "/;/".join(self.rhs))
+
+    @staticmethod
+    def load(txt):
+        prod = Production(0, "", ())
+        txt = txt.split("/*/")
+        prod.nr = int(txt[0])
+        prod.lhs = txt[1]
+        prod.rhs = txt[2].split("/;/")
+        return prod
+
 
 
 class Item:
@@ -77,6 +90,21 @@ class TableElem:
     def __repr__(self):
         return self.action + ": " + str(self.goto)
 
+    def save(self):
+        goto_str = "/;/".join(["{}/;;/{}".format(key, self.goto[key]) for key in self.goto])
+        return "{}/*/{}".format(self.action, goto_str)
+
+    @staticmethod
+    def load(txt):
+        table_elem = TableElem("",{})
+        txt = txt.split("/*/")
+        table_elem.action = txt[0]
+        if "s" in table_elem.action:
+            for keyval in txt[1].split("/;/"):
+                keyval = keyval.split("/;;/")
+                table_elem.goto[keyval[0]] = int(keyval[1])
+        return table_elem
+
 
 class LR0Table:
     def closure(self, state):
@@ -105,14 +133,14 @@ class LR0Table:
 
     def __init__(self, file_name):
         self.meta_data = {}
-        self.file_name = file_name
         self.symbols = set()
         self.terminals = set()
         self.non_terminals = set()
         self.productions = []
         self.states = []
         self.table = []
-        self.create()
+        if file_name != "":
+            self.create(file_name)
 
     def state_pos(self, state):
         for i in range(len(self.states)):
@@ -120,9 +148,9 @@ class LR0Table:
                 return i
         return -1
 
-    def create(self):
+    def create(self, file_name):
         # 1) read from file, get productions and symbols
-        with open(self.file_name, "r") as f:
+        with open(file_name, "r") as f:
             # get and number all the productions
             for line in f.readlines():
                 lhs, rhss = line.split("->")
@@ -182,6 +210,7 @@ class LR0Table:
                     raise Exception("ERROR with state {} at item {}; old action: {}".format(state, item, action))
             table_elem.action = action
             self.table.append(table_elem)
+            print(self.table)
 
     def get_action(self, state_nr, symbol):
         # Return values: `s <state_nr>` shift to state with number state_nr
@@ -194,14 +223,28 @@ class LR0Table:
         else:
             return self.table[state_nr].action
 
-
     def save(self, file_name):
         with open(file_name, "w") as f:
-            pass
+            f.write(str(len(self.productions)) + "\n")
+            for prod in self.productions:
+                f.write(prod.save() + "\n")
+            f.write(str(len(self.table)) + "\n")
+            for table_elem in self.table:
+                f.write(table_elem.save() + "\n")
 
-    def load(self, file_name):
+    @staticmethod
+    def load(file_name):
+        lr0Table = LR0Table("")
         with open(file_name, "r") as f:
-            pass
+            nr_prod = int(f.readline().strip())
+            for i in range(nr_prod):
+                lr0Table.productions.append(Production.load(f.readline().strip()))
+            nr_table_elem = int(f.readline().strip())
+            for i in range(nr_table_elem):
+                lr0Table.table.append(TableElem.load(f.readline().strip()))
+        return lr0Table
 
 
-LR0Table("demo.txt")
+# LR0Table("demo.txt").save("table.txt")
+t = LR0Table.load("table.txt")
+print(t.table)
