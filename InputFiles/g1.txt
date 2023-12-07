@@ -1,4 +1,5 @@
-S' -> S
-S -> a A
+S' A
+a b c
+S' -> a A
 A -> b A
 A -> c
