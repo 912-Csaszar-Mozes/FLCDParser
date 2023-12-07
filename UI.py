@@ -13,15 +13,15 @@ class Menu:
         :param input_file:
         :param output_file:
         """
-        self.lr0Table = LR0Table(input_file)  # TODO This might have to be changed with Grammar class in the future
+        self.lr0Table = LR0Table(input_file)
         self.lr0Table.save(output_file)
         self.table = LR0Table.load(output_file)
 
         self.menu_commands = {
             "0": exit,
-            "1": lambda: print("The terminals are as follows: " + str(self.lr0Table.terminals)),
-            "2": lambda: print("The non-terminals are as follows: " + str(self.lr0Table.non_terminals)),
-            "3": lambda: print("The productions are as follows: " + str(self.lr0Table.productions)),
+            "1": lambda: print("The terminals are as follows: " + str(self.lr0Table.grammar.terminals)),
+            "2": lambda: print("The non-terminals are as follows: " + str(self.lr0Table.grammar.non_terminals)),
+            "3": lambda: print("The productions are as follows: " + str(self.lr0Table.grammar.productions)),
             "4": lambda: partial(self.print_productions)(input("Input your production: ")),
             "5": lambda: print("The productions are as follows: " + str(self.table.table)),
             "6": lambda: print("The given grammar is context-free"
@@ -46,8 +46,8 @@ class Menu:
         Checks if the grammar is a context-free grammar by making sure each production has only one non-terminal
         :return: True if the grammar is context-free, False otherwise
         """
-        for production in self.lr0Table.productions:
-            if " " in production.lhs or production.lhs not in self.lr0Table.non_terminals:
+        for production in self.lr0Table.grammar.productions:
+            if " " in production.lhs or production.lhs not in self.lr0Table.grammar.non_terminals:
                 return False
         return True
 
@@ -57,11 +57,11 @@ class Menu:
         :param non_terminal: The given non-terminal
         :return: All productions associated to the non-terminal that was provided
         """
-        if non_terminal not in self.lr0Table.non_terminals:
+        if non_terminal not in self.lr0Table.grammar.non_terminals:
             print("The given non-terminal does not have any productions associated with it!")
         else:
             print(f"The productions for the non-terminal \"{non_terminal}\" are as follows: ")
-            for production in self.lr0Table.productions:
+            for production in self.lr0Table.grammar.productions:
                 if production.lhs == non_terminal:
                     print(production)
 

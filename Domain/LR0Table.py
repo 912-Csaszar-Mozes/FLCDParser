@@ -1,3 +1,4 @@
+from Domain.Grammar import Grammar
 from Domain.Item import Item
 from Domain.Production import Production
 from Domain.State import State
@@ -11,8 +12,8 @@ class LR0Table:
             changed = False
             for item in state.items:
                 symbol_after_dot = item.symbol_after_dot()
-                if symbol_after_dot in self.non_terminals:
-                    for prod in self.productions:
+                if symbol_after_dot in self.grammar.non_terminals:
+                    for prod in self.grammar.productions:
                         if prod.lhs == symbol_after_dot:
                             new_item = Item(prod, 0)
                             if not state.has_item(new_item):
@@ -30,10 +31,7 @@ class LR0Table:
         return self.closure(State(-1, items))
 
     def __init__(self, file_name):
-        self.symbols = set()
-        self.terminals = set()
-        self.non_terminals = set()
-        self.productions = []
+        self.grammar = Grammar(file_name)
         self.states = []
         self.table = []
         if file_name != "":
@@ -46,33 +44,13 @@ class LR0Table:
         return -1
 
     def create(self, file_name):
-        # 1) read from file, get productions and symbols
-        with open("InputFiles/" + file_name, "r") as f:
-            # get and number all the productions
-            for line in f.readlines():
-
-                lhs, rhss = line.split("->")
-                lhs = lhs.strip()
-                # add left hand side to non-terminals and symbols
-                self.symbols.add(lhs)
-                self.non_terminals.add(lhs)
-                rhss = rhss.split("|")
-                for rhs in rhss:
-                    rhs = tuple(filter(lambda s: s != "", map(lambda s: s.strip(), rhs.split(" "))))
-                    self.productions.append(Production(len(self.productions), lhs, rhs))
-                    # add all symbols from right hand side to symbols
-                    for s in rhs:
-                        self.symbols.add(s)
-        # the terminals can be gotten by symbols \ non_terminals
-        self.terminals = self.symbols.difference(self.non_terminals)
-
-        # 2) calculate states and closures
+        # 1) calculate states and closures
         gotos = {}
-        self.states.append(self.closure(State(0, [Item(self.productions[0], 0)])))
+        self.states.append(self.closure(State(0, [Item(self.grammar.productions[0], 0)])))
         i = 0
         while i < len(self.states):
             state = self.states[i]
-            for s in self.symbols:
+            for s in self.grammar.symbols:
                 new_state = self.goto(state, s)
                 if len(new_state.items) != 0:
                     state_pos = self.state_pos(new_state)
@@ -85,7 +63,7 @@ class LR0Table:
                         gotos[i] = [(s, new_state.nr)]
             i += 1
 
-        # 3) fill in the table
+        # 2) fill in the table
         for i in range(len(self.states)):
             # see if it is reduce or accept
             action = ""
@@ -94,7 +72,7 @@ class LR0Table:
             for item in state.items:
                 if item.symbol_after_dot() is None:
                     if action == "":
-                        if item.prod == self.productions[0]:
+                        if item.prod == self.grammar.productions[0]:
                             action = "a"
                         else:
                             action = "r " + str(item.prod.nr)
@@ -123,8 +101,8 @@ class LR0Table:
 
     def save(self, file_name):
         with open("OutputFiles/" + file_name, "w") as f:
-            f.write(str(len(self.productions)) + "\n")
-            for prod in self.productions:
+            f.write(str(len(self.grammar.productions)) + "\n")
+            for prod in self.grammar.productions:
                 f.write(prod.save() + "\n")
             f.write(str(len(self.table)) + "\n")
             for table_elem in self.table:
@@ -136,7 +114,7 @@ class LR0Table:
         with open("OutputFiles/" + file_name, "r") as f:
             nr_prod = int(f.readline().strip())
             for i in range(nr_prod):
-                lr0Table.productions.append(Production.load(f.readline().strip()))
+                lr0Table.grammar.productions.append(Production.load(f.readline().strip()))
             nr_table_elem = int(f.readline().strip())
             for i in range(nr_table_elem):
                 lr0Table.table.append(TableElem.load(f.readline().strip()))
