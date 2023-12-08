@@ -1,4 +1,23 @@
-S' -> S
-S -> A B
-A -> 0 A
-B -> 1 A
+program decllist declaration constlist constdecl constant basetype arraydecl type cmpdstmt stmt simplestmt assignstmt expression term factor iostmt structstmt ifstmt whilestmt condition relation stmtlist
+, . : = + * < <= = <> >= > VAR CONST INT CHAR REAL STRING ARRAY OF IF THEN ELSE WHILE THEN READ WRITE n type1 identifier [ ]
+program -> VAR decllist , cmpdstmt .
+decllist -> declaration | declaration , decllist
+constlist -> constdecl | constdecl , constlist
+declaration -> identifier : type
+constdecl -> CONST identifier = basetype
+basetype -> INT | CHAR | REAL | STRING
+arraydecl -> ARRAY n OF type1
+type -> basetype | arraydecl
+cmpdstmt -> stmt . | stmt , stmtlist
+stmt -> simplestmt | structstmt
+simplestmt -> assignstmt | iostmt
+assignstmt -> identifier = expression
+expression -> expression + term | term
+term -> term * factor | factor
+factor -> expression | identifier | constant
+iostmt -> READ identifier | WRITE identifier | WRITE constant
+structstmt -> cmpdstmt | ifstmt | whilestmt
+ifstmt -> IF condition THEN stmt [ ELSE stmt ]
+whilestmt -> WHILE condition THEN stmt
+condition -> expression relation expression
+relation -> < | <= | = | <> | >= | >

@@ -34,8 +34,8 @@ class LR0Table:
         self.grammar = Grammar(file_name)
         self.states = []
         self.table = []
-        if file_name != "":
-            self.create(file_name)
+        # if file_name != "":
+        #     self.create(file_name)
 
     def state_pos(self, state):
         for i in range(len(self.states)):
