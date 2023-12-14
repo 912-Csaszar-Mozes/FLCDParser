@@ -12,7 +12,7 @@ class Grammar:
 
     def _create(self, file_name):
         # 1) read from file, get productions and symbols
-        with open("InputFiles/" + file_name, "r") as f:
+        with open(file_name, "r") as f:
             self.non_terminals = set(f.readline().strip().split(" "))
             self.terminals = set(f.readline().strip().split(" "))
             # the symbols can be gotten by   terminals U non_terminals
@@ -38,3 +38,12 @@ class Grammar:
             lhs += "'"
         self.productions.insert(0, Production(-1, lhs, [self.productions[0].lhs]))
         self.non_terminals.add(lhs)
+
+    def save(self):
+        return " ".join(self.terminals) + "/*/" + " ".join(self.non_terminals)
+
+    def load(self, txt):
+        lines = txt.split("/*/")
+        self.terminals = lines[0].split(" ")
+        self.non_terminals = lines[1].split(" ")
+        self.symbols = self.terminals.union(self.non_terminals)

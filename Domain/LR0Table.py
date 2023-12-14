@@ -34,8 +34,9 @@ class LR0Table:
         self.grammar = Grammar(file_name)
         self.states = []
         self.table = []
-        # if file_name != "":
-        #     self.create(file_name)
+        if file_name != "":
+            gotos = self.canonical_collection()
+            self.create(gotos)
 
     def state_pos(self, state):
         for i in range(len(self.states)):
@@ -43,8 +44,8 @@ class LR0Table:
                 return i
         return -1
 
-    def create(self, file_name):
-        # 1) calculate states and closures
+    # calculate states and closure
+    def canonical_collection(self):
         gotos = {}
         self.states.append(self.closure(State(0, [Item(self.grammar.productions[0], 0)])))
         i = 0
@@ -57,13 +58,16 @@ class LR0Table:
                     new_state.nr = len(self.states) if state_pos == -1 else state_pos
                     if state_pos == -1:
                         self.states.append(new_state)
+                    # add calculated state to goto list
                     if gotos.get(i) is not None:
                         gotos[i].append((s, new_state.nr))
                     else:
                         gotos[i] = [(s, new_state.nr)]
             i += 1
+        return gotos
 
-        # 2) fill in the table
+    # fill in the table
+    def create(self, gotos):
         for i in range(len(self.states)):
             # see if it is reduce or accept
             action = ""
@@ -86,7 +90,6 @@ class LR0Table:
                     raise Exception("ERROR with state {} at item {}; old action: {}".format(state, item, action))
             table_elem.action = action
             self.table.append(table_elem)
-            # print(self.table)
 
     def get_action(self, state_nr, symbol):
         # Return values: `s <state_nr>` shift to state with number state_nr
@@ -101,6 +104,7 @@ class LR0Table:
 
     def save(self, file_name):
         with open("OutputFiles/" + file_name, "w") as f:
+            f.write(self.grammar.save() + "\n")
             f.write(str(len(self.grammar.productions)) + "\n")
             for prod in self.grammar.productions:
                 f.write(prod.save() + "\n")
@@ -112,6 +116,7 @@ class LR0Table:
     def load(file_name):
         lr0Table = LR0Table("")
         with open("OutputFiles/" + file_name, "r") as f:
+            lr0Table.grammar.load(f.readline())
             nr_prod = int(f.readline().strip())
             for i in range(nr_prod):
                 lr0Table.grammar.productions.append(Production.load(f.readline().strip()))
