@@ -22,8 +22,8 @@ class Menu:
             "1": lambda: print("The terminals are as follows: " + str(self.lr0Table.grammar.terminals)),
             "2": lambda: print("The non-terminals are as follows: " + str(self.lr0Table.grammar.non_terminals)),
             "3": lambda: print("The productions are as follows: " + str(self.lr0Table.grammar.productions)),
-            "4": lambda: partial(self.print_productions)(input("Input your production: ")),
-            "5": lambda: print("The productions are as follows: " + str(self.table.table)),
+            "4": lambda: partial(self.print_productions)(input("Input your non-terminal: ")),
+            "5": lambda: print("The table is as follows: " + str(self.table.table)),
             "6": lambda: print("The given grammar is context-free"
                                if partial(self.check_cfg)() else "The given grammar is NOT context-free"),
         }
@@ -79,5 +79,5 @@ class Menu:
                 print("Wrong input was given!")
 
 
-menu = Menu("InputFiles/g2.txt", "table.txt")
+menu = Menu("InputFiles/g1.txt", "table.txt")
 menu.run()

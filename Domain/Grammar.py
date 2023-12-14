@@ -44,6 +44,6 @@ class Grammar:
 
     def load(self, txt):
         lines = txt.split("/*/")
-        self.terminals = lines[0].split(" ")
-        self.non_terminals = lines[1].split(" ")
+        self.terminals = set(lines[0].split(" "))
+        self.non_terminals = set(lines[1].split(" "))
         self.symbols = self.terminals.union(self.non_terminals)
