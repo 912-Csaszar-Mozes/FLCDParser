@@ -79,5 +79,5 @@ class Menu:
                 print("Wrong input was given!")
 
 
-menu = Menu("InputFiles/g1.txt", "table.txt")
+menu = Menu("InputFiles/g2.txt", "table.txt")
 menu.run()

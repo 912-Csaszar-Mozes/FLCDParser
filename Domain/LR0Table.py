@@ -73,6 +73,7 @@ class LR0Table:
             action = ""
             state = self.states[i]
             table_elem = TableElem("", {})
+            # add reduce items
             for item in state.items:
                 if item.symbol_after_dot() is None:
                     if action == "":
@@ -81,13 +82,14 @@ class LR0Table:
                         else:
                             action = "r " + str(item.prod.nr)
                     else:
-                        raise Exception("ERROR with state {} at item {}; old action: {}".format(state, item, action))
+                        raise Exception("REDUCE-REDUCE CONFLICT with state \n `{}` \n at symbol `{}`".format(state, item))
+            # add shift items
             for goto in gotos.get(i, []):
                 if action == "" or action == "s":
                     table_elem.goto[goto[0]] = goto[1]
                     action = "s"
                 else:
-                    raise Exception("ERROR with state {} at item {}; old action: {}".format(state, item, action))
+                    raise Exception("SHIFT-REDUCE CONFLICT with state \n `{}` \n at symbol `{}`".format(state, goto[0]))
             table_elem.action = action
             self.table.append(table_elem)
 
