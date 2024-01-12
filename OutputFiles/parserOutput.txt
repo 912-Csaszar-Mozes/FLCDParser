@@ -1,0 +1,3 @@
+  Depth   	  Symbol  	   Data   	  Parent  	FirstChild
+    0     	    S'    	   None   	   None   	    S     
+    1     	    S     	   None   	   None   	   None   

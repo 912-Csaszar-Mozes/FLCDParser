@@ -1,14 +1,17 @@
-program decllist declaration constlist constdecl constant basetype arraydecl type cmpdstmt stmt simplestmt assignstmt expression term factor iostmt structstmt ifstmt whilestmt condition relation stmtlist
-, . : = + * < <= = <> >= > VAR CONST INT CHAR REAL STRING ARRAY OF IF THEN ELSE WHILE THEN READ WRITE n type1 identifier [ ]
-program -> VAR decllist , cmpdstmt .
-decllist -> declaration | declaration , decllist
-constlist -> constdecl | constdecl , constlist
+program decllist decltail consttail stmttail declaration constlist constdecl constant basetype arraydecl type cmpdstmt stmt simplestmt assignstmt expression term factor iostmt structstmt ifstmt whilestmt condition relation stmtlist
+, . : = + * < <= = <> >= > ε VAR CONST INT CHAR REAL STRING ARRAY OF IF THEN ELSE WHILE THEN READ WRITE n type1 identifier [ ]
+program -> VAR decllist .
+decllist -> declaration decltail
+decltail -> , declaration decltail | ε
 declaration -> identifier : type
-constdecl -> CONST identifier = basetype
+type -> basetype | arraydecl
 basetype -> INT | CHAR | REAL | STRING
 arraydecl -> ARRAY n OF type1
-type -> basetype | arraydecl
-cmpdstmt -> stmt . | stmt , stmtlist
+constlist -> constdecl consttail
+consttail -> , constdecl consttail | ε
+constdecl -> CONST identifier = basetype
+stmtlist -> stmt stmttail
+stmttail -> , stmt stmttail | ε
 stmt -> simplestmt | structstmt
 simplestmt -> assignstmt | iostmt
 assignstmt -> identifier = expression

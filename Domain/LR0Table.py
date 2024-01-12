@@ -44,6 +44,9 @@ class LR0Table:
                 return i
         return -1
 
+    def get_goto(self, state_nr, symbol):
+        return self.table[state_nr].goto.get(symbol)
+
     # calculate states and closure
     def canonical_collection(self):
         gotos = {}

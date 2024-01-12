@@ -36,7 +36,7 @@ class Grammar:
         lhs = "S'"
         while lhs in self.non_terminals:
             lhs += "'"
-        self.productions.insert(0, Production(-1, lhs, [self.productions[0].lhs]))
+        self.productions.append(Production(-1, lhs, [self.productions[0].lhs]))
         self.non_terminals.add(lhs)
 
     def save(self):

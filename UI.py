@@ -16,6 +16,8 @@ class Menu:
         self.lr0Table = LR0Table(input_file)
         self.lr0Table.save(output_file)
         self.table = LR0Table.load(output_file)
+        for i in self.table.table:
+            print(i)
 
         self.menu_commands = {
             "0": exit,
@@ -79,5 +81,5 @@ class Menu:
                 print("Wrong input was given!")
 
 
-menu = Menu("InputFiles/g2.txt", "table.txt")
+menu = Menu("InputFiles/g1.txt", "table.txt")
 menu.run()
