@@ -16,8 +16,6 @@ class Menu:
         self.lr0Table = LR0Table(input_file)
         self.lr0Table.save(output_file)
         self.table = LR0Table.load(output_file)
-        for i in self.table.table:
-            print(i)
 
         self.menu_commands = {
             "0": exit,

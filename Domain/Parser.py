@@ -13,15 +13,14 @@ class LR0Parser:
         self.stack.append(0)
 
         idx = 0
-        print("Beginning parsing. Stack:", self.stack, "Input:", input_string[idx:])
+        # print("Beginning parsing. Stack:", self.stack, "Input:", input_string[idx:])
         while True:
             current_state = self.stack[-1]
             current_symbol = input_string[idx] if idx < len(input_string) else None
 
-            print(current_state, current_symbol)
             action = self.lr0_table.get_action(current_state, current_symbol)
 
-            print("START Action:", action, "Stack:", self.stack, "Input:", input_string[idx:])
+            # print("START Action:", action, "Stack:", self.stack, "Input:", input_string[idx:])
 
             if action == 'err':
                 print("Error: No action defined for state", current_state, "and symbol", current_symbol)
@@ -42,7 +41,7 @@ class LR0Parser:
                 for _ in range(len(rhs)):
                     self.stack.pop()
                     self.output.ascend_tree()
-                print(production)
+                # print(production)
                 self.outputStack.insert(0, production_number)
 
                 self.output.add_node(lhs)  # Add nonterminal node after reduction
@@ -66,20 +65,65 @@ class LR0Parser:
                     print("Error: Extra input symbols after parsing completion.")
                 break
 
-            print("END Action:", action, "Stack:", self.stack, "Input:", input_string[idx:])
+            # print("END Action:", action, "Stack:", self.stack, "Input:", input_string[idx:])
 
-        self.output.recreate_tree(self.outputStack, self.lr0_table.grammar.productions, self.lr0_table.grammar.non_terminals)
+        self.output.recreate_tree(self.outputStack, self.lr0_table.grammar.productions)
         return self.output
 
 
-lr0_table = LR0Table("InputFiles\g1.txt")
-print("lr0table: " + str(lr0_table.table))
+p1 = """largest
+:
+INT
+.
+if
+a
+>=
+b
+&&
+a
+>=
+c
+then
+largest
+:
+a
+.
+if
+b
+>=
+a
+&&
+b
+>=
+c
+then
+largest
+:
+b
+.
+if
+c
+>=
+a
+&&
+c
+>=
+b
+then
+largest
+:
+c
+.
+print
+largest
+.
+."""
 
+lr0_table = LR0Table("InputFiles\g1.txt")
 lr0_parser = LR0Parser(lr0_table)
+
+# parser_output = lr0_parser.parse(p1.split("\n"))
 parser_output = lr0_parser.parse('abc')
 
-# parser_output.print_to_file('OutputFiles\parserOutput.txt')
-# lr0_parser.output.print_to_screen()
-# print(lr0_parser.output.transform_tree())
-# print(lr0_parser.outputStack)
-# print(lr0_parser.lr0_table.grammar.productions)
+parser_output.print_to_file('OutputFiles\parserOutput.txt')
+parser_output.print_to_screen()

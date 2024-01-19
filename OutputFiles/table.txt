@@ -1,14 +1,73 @@
-c b a/*/S' A S
-4
--1/*/S'/*/S
-0/*/S/*/a/;/A
-1/*/A/*/b/;/A
-2/*/A/*/c
-7
-s/*/S/;;/1/;/a/;;/2
+<= STRING with THEN > maxThree IF identifier . ] ε WHILE + CONST <> < * VAR , void WRITE n >= OF READ CHAR ARRAY INT = : REAL ELSE [ type1/*/assignstmt iostmt structstmt condition stmt factor decltail stmttail constdecl consttail relation S' decllist simplestmt cmpdstmt stmtlist constlist program arraydecl type basetype expression declaration whilestmt ifstmt constant term
+47
+0/*/program/*/VAR/;/decllist/;/.
+1/*/decllist/*/declaration/;/decltail
+2/*/decltail/*/,/;/declaration/;/decltail
+3/*/decltail/*/ε
+4/*/declaration/*/identifier/;/:/;/type
+5/*/type/*/basetype
+6/*/type/*/arraydecl
+7/*/basetype/*/INT
+8/*/basetype/*/CHAR
+9/*/basetype/*/REAL
+10/*/basetype/*/STRING
+11/*/arraydecl/*/ARRAY/;/n/;/OF/;/type1
+12/*/constlist/*/constdecl/;/consttail
+13/*/consttail/*/,/;/constdecl/;/consttail
+14/*/consttail/*/ε
+15/*/constdecl/*/CONST/;/identifier/;/=/;/basetype
+16/*/stmtlist/*/stmt/;/stmttail
+17/*/stmttail/*/,/;/stmt/;/stmttail
+18/*/stmttail/*/ε
+19/*/stmt/*/simplestmt
+20/*/stmt/*/structstmt
+21/*/simplestmt/*/assignstmt
+22/*/simplestmt/*/iostmt
+23/*/assignstmt/*/identifier/;/=/;/expression
+24/*/expression/*/expression/;/+/;/term
+25/*/expression/*/term
+26/*/term/*/term/;/*/;/factor
+27/*/term/*/factor
+28/*/factor/*/expression
+29/*/factor/*/identifier
+30/*/factor/*/constant
+31/*/iostmt/*/READ/;/identifier
+32/*/iostmt/*/WRITE/;/identifier
+33/*/iostmt/*/WRITE/;/constant
+34/*/structstmt/*/cmpdstmt
+35/*/structstmt/*/ifstmt
+36/*/structstmt/*/whilestmt
+37/*/ifstmt/*/IF/;/condition/;/THEN/;/stmt/;/[/;/ELSE/;/stmt/;/]
+38/*/whilestmt/*/WHILE/;/condition/;/THEN/;/stmt
+39/*/condition/*/expression/;/relation/;/expression
+40/*/relation/*/<
+41/*/relation/*/<=
+42/*/relation/*/=
+43/*/relation/*/<>
+44/*/relation/*/>=
+45/*/relation/*/>
+-1/*/S'/*/program
+23
+s/*/VAR/;;/1
+s/*/identifier/;;/2/;/decllist/;;/3/;/declaration/;;/4
+s/*/:/;;/5
+s/*/./;;/6
+s/*/decltail/;;/7/;/ε/;;/8/;/,/;;/9
+s/*/STRING/;;/10/;/arraydecl/;;/11/;/type/;;/12/;/basetype/;;/13/;/CHAR/;;/14/;/ARRAY/;;/15/;/INT/;;/16/;/REAL/;;/17
 a/*/
-s/*/A/;;/3/;/c/;;/4/;/b/;;/5
-r 0/*/
-r 2/*/
-s/*/A/;;/6/;/c/;;/4/;/b/;;/5
 r 1/*/
+r 3/*/
+s/*/identifier/;;/2/;/declaration/;;/18
+r 10/*/
+r 6/*/
+r 4/*/
+r 5/*/
+r 8/*/
+s/*/n/;;/19
+r 7/*/
+r 9/*/
+s/*/decltail/;;/20/;/ε/;;/8/;/,/;;/9
+s/*/OF/;;/21
+r 2/*/
+s/*/type1/;;/22
+r 11/*/

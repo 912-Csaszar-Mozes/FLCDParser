@@ -1,6 +1,6 @@
-program decllist decltail consttail stmttail declaration constlist constdecl constant basetype arraydecl type cmpdstmt stmt simplestmt assignstmt expression term factor iostmt structstmt ifstmt whilestmt condition relation stmtlist
-, . : = + * < <= = <> >= > ε VAR CONST INT CHAR REAL STRING ARRAY OF IF THEN ELSE WHILE THEN READ WRITE n type1 identifier [ ]
-program -> VAR decllist .
+letter number identifier identifiertail program decllist decltail consttail stmttail declaration constlist constdecl constant basetype arraydecl type cmpdstmt stmt simplestmt assignstmt expression term factor iostmt structstmt ifstmt whilestmt condition relation stmtlist
+, . : = + * < <= = <> >= > ε VAR CONST INT CHAR REAL STRING ARRAY OF IF THEN ELSE WHILE THEN READ WRITE n type1 [ ] a b c d e f g h i j k l m n o p q r s t u v w x y z A B C D E F G H I J K L M N O P Q R S T U V W X Y Z 0 1 2 3 4 5 6 7 8 9
+program -> VAR decllist stmtlist constlist.
 decllist -> declaration decltail
 decltail -> , declaration decltail | ε
 declaration -> identifier : type
@@ -24,3 +24,7 @@ ifstmt -> IF condition THEN stmt [ ELSE stmt ]
 whilestmt -> WHILE condition THEN stmt
 condition -> expression relation expression
 relation -> < | <= | = | <> | >= | >
+identifier -> letter identifiertail
+identifiertail -> letter identifiertail | number identifiertail | ε
+letter -> a | b | c | d | e | f | g | h | i | j | k | l | m | n | o | p | q | r | s | t | u | v | w | x | y | z | A | B | C | D | E | F | G | H | I | J | K | L | M | N | O | P | Q | R | S| T | U | V | W | X | Y | Z
+number -> 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9
